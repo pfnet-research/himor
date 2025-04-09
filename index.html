@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content="HiMoR " />
+    <meta name="keywords" content="3DGS, HiMoR, Gaussian" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      HiMoR: Monocular Deformable Gaussian Reconstruction with Hierarchical Motion Representation
+    </title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css" />
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css" />
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css" />
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+    />
+    <link rel="stylesheet" href="./static/css/index.css" />
+    <link rel="icon" href="./static/images/favicon.ico" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <div class="navbar-start" style="flex-grow: 1; justify-content: center">
+          <a class="navbar-item" href="https://www.preferred.jp/en/">
+            <span class="icon">
+              <i class="fas fa-home"></i>
+            </span>
+          </a>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link"> More Research </a>
+            <div class="navbar-dropdown">
+              <a
+                class="navbar-item"
+                href="https://pfnet-research.github.io/rdp-neus/"
+              >
+                Rdp-NeuS (ECCV 2024)
+              </a>
+              <a
+                class="navbar-item"
+                href="https://pfnet-research.github.io/surface-aligned-nerf/"
+              >
+                Surface-aligned NeRF (CVPR 2022)
+              </a>
+              <a
+                class="navbar-item"
+                href="https://pfnet-research.github.io/neussl/"
+              >
+                NeuS with structured light (BMVC 2022)
+              </a>
+              <a
+                class="navbar-item"
+                href="https://pfnet-research.github.io/distilled-feature-fields/"
+              >
+                Distilled feature fields (NeurIPS 2022)
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <h1 class="title is-1 publication-title">
+                HiMoR: Monocular Deformable Gaussian Reconstruction with
+                Hierarchical Motion Representation
+              </h1>
+              <h3 style="color: #5a6268" class="title is-3">CVPR 2025</h3>
+              <div class="is-size-5 publication-authors">
+                <span class="author-block">
+                  <a href="">Yiming Liang</a><sup>1</sup>,</span
+                >
+                <span class="author-block">
+                  <a href="">Tianhan Xu</a><sup>2</sup>,</span
+                >
+                <span class="author-block">
+                  <a href="">Yuta Kikuchi</a><sup>2</sup>
+                </span>
+              </div>
+
+              <div class="is-size-5 publication-authors">
+                <span class="author-block"><sup>1</sup>Waseda University,</span>
+                <span class="author-block"
+                  ><sup>2</sup>Preferred Networks, Inc.</span
+                >
+              </div>
+
+              <div class="column has-text-centered">
+                <div class="publication-links">
+                  <span class="link-block">
+                    <a
+                      href="https://arxiv.org/abs/2504.06210"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon">
+                        <i class="ai ai-arxiv"></i>
+                      </span>
+                      <span>arXiv</span>
+                    </a>
+                  </span>
+                  <!-- Video Link. -->
+                  <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+                  <!-- Code Link. -->
+                  <span class="link-block">
+                    <a
+                      href=""
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon">
+                        <i class="fab fa-github"></i>
+                      </span>
+                      <span>Code (comming soon)</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-light is-small">
+      <div class="hero-body">
+        <div class="container">
+          <div id="results-carousel" class="carousel results-carousel">
+            <div class="item item-steve">
+              <video
+                poster=""
+                id="backpack"
+                autoplay
+                muted
+                loop
+                playsinline
+                height="100%"
+              >
+                <source
+                  src="./static/videos/backpack_ours.mp4"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+            <div class="item item-steve">
+              <video
+                poster=""
+                id="spin"
+                autoplay
+                muted
+                loop
+                playsinline
+                height="100%"
+              >
+                <source src="./static/videos/spin_ours.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="item item-fullbody">
+              <video
+                poster=""
+                id="paper"
+                autoplay
+                muted
+                loop
+                playsinline
+                height="100%"
+              >
+                <source src="./static/videos/paper_ours.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="item item-blueshirt">
+              <video
+                poster=""
+                id="mochi"
+                autoplay
+                muted
+                loop
+                playsinline
+                height="100%"
+              >
+                <source src="./static/videos/mochi_ours.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="item item-blueshirt">
+              <video
+                poster=""
+                id="sriracha"
+                autoplay
+                muted
+                loop
+                playsinline
+                height="100%"
+              >
+                <source src="./static/videos/sriracha_ours.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="item item-blueshirt">
+              <video
+                poster=""
+                id="pillow"
+                autoplay
+                muted
+                loop
+                playsinline
+                height="100%"
+              >
+                <source src="./static/videos/pillow_ours.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="item item-blueshirt">
+              <video
+                poster=""
+                id="handwavy"
+                autoplay
+                muted
+                loop
+                playsinline
+                height="100%"
+              >
+                <source src="./static/videos/handwavy_ours.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="item item-blueshirt">
+              <video
+                poster=""
+                id="teddy"
+                autoplay
+                muted
+                loop
+                playsinline
+                height="100%"
+              >
+                <source src="./static/videos/teddy_ours.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+          <h2 class="subtitle has-text-centered">
+            Given a single video clip,
+            HiMoR enables novel view synthesis with significant viewpoint
+            changes.
+          </h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <!-- Abstract. -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+              <p>
+                We present <u>Hi</u>erarchical <u>Mo</u>tion <u>R</u>epresentation (HiMoR), a novel 
+                deformation representation for 3D Gaussian primitives capable of 
+                achieving high-quality monocular dynamic 3D reconstruction.
+              </p>
+              <p>
+                The insight behind HiMoR is that motions in everyday scenes 
+                can be decomposed into coarser motions that serve as the foundation for finer details. 
+                Using a tree structure, HiMoR's nodes represent different levels of motion detail, 
+                with shallower nodes modeling coarse motion for temporal smoothness and deeper nodes capturing finer motion. 
+                Additionally, our model uses a few shared motion bases to represent motions of different sets of nodes, 
+                aligning with the assumption that motion tends to be smooth and simple. 
+                This motion representation design provides Gaussians with a more structured deformation, 
+                maximizing the use of temporal relationships to tackle the challenging task of monocular dynamic 3D reconstruction.
+              </p>
+              <p>
+                We also propose using a more reliable perceptual metric as an alternative, 
+                given that pixel-level metrics for evaluating monocular dynamic 3D reconstruction 
+                can sometimes fail to accurately reflect the true quality of reconstruction. 
+                Extensive experiments demonstrate our method's efficacy in achieving superior novel view synthesis 
+                from challenging monocular videos with complex motions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Method overview</h2>
+        <div class="content has-text-justified">
+          <img src="static/images/overview.png" />
+          <p>
+            <span
+              style="
+                background-color: rgb(210, 222, 238);
+                color: black;
+                font-weight: bold;
+              "
+              >Left:</span>
+            The proposed hierarchical motion representation (HiMoR) is defined in the canonical frame with 3D Gaussian primitives. 
+            HiMoR uses a tree structure where each node represents the relative motion to its parent node, 
+            with the root node representing stationary motion that is fixed to the world coordinate origin.<br />
+            <span
+              style="
+                background-color: rgb(227, 221, 233);
+                color: black;
+                font-weight: bold;
+              "
+              >Top right:</span>
+            Child nodes that belong to the same parent node share a set of SE(3) motion bases, 
+            and the motion of each child node is obtained by weighting the motion bases with its own coefficients. 
+            The motion of leaf nodes relative to the world coordinate is iteratively computed based on the hierarchy of HiMoR. <br />
+            <span
+              style="
+                background-color: rgb(213, 233, 228);
+                color: black;
+                font-weight: bold;
+              "
+              >Bottom right:</span>
+            The deformation of each Gaussian is derived by weighting the motion of its K-nearest neighbor (KNN) leaf nodes within the canonical frame.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="dycheck-compare" class="section">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3">Comparisons</h2>
+            <p class="has-text-left">
+              Comparisons of dynamic 3D reconstruction from monocular videos.
+            </p>
+
+            <!-- Table for Comparison -->
+            <table class="table has-text-centered" style="table-layout: fixed; width: 100%;">
+              <thead>
+                <tr>
+                  <th style="width: 16.67%">Input</th>
+                  <th style="width: 16.67%">Ground Truth</th>
+                  <th style="width: 16.67%">HyperNeRF</th>
+                  <th style="width: 16.67%">Marbles</th>
+                  <th style="width: 16.67%">SoM</th>
+                  <th style="width: 16.67%">Ours</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <!-- Video Comparison -->
+                  <td colspan="6">
+                    <video
+                      id="dycheck-video"
+                      class="video"
+                      width="100%"
+                      loop
+                      playsinline
+                      autoplay
+                      muted
+                    >
+                      <source
+                        src="./static/videos/teddy.mp4"
+                      />
+                    </video>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Scene Selection Pills -->
+            <div
+              class="pill-row scene-pills columns is-centered"
+              id="dycheck-pills"
+              role="group"
+              aria-relevant="additions text"
+            >
+              <div class="pill scene-pill" data-value="apple">
+                <img class="card-img" src="static/images/apple_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="block">
+                <img class="card-img" src="static/images/block_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="paper_windmill">
+                <img class="card-img" src="static/images/paper-windmill_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="spin">
+                <img class="card-img" src="static/images/spin_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="teddy">
+                <img class="card-img" src="static/images/teddy_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="balloon1">
+                <img class="card-img" src="static/images/balloon1_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="balloon2">
+                <img class="card-img" src="static/images/balloon2_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="jumping">
+                <img class="card-img" src="static/images/jumping_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="playground">
+                <img class="card-img" src="static/images/playground_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="skating">
+                <img class="card-img" src="static/images/skating_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="truck">
+                <img class="card-img" src="static/images/truck_cover.png" />
+              </div>
+              <div class="pill scene-pill" data-value="umbrella">
+                <img class="card-img" src="static/images/umbrella_cover.png" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Get all the scene pills
+        const scenePills = document.querySelectorAll(".scene-pill");
+        // Get the video element
+        const videoElement = document.getElementById("dycheck-video");
+        // Add click event listener to each pill
+        scenePills.forEach((pill) => {
+          pill.addEventListener("click", (event) => {
+            // Get the data-value attribute of the clicked pill
+            const sceneValue = event.currentTarget.getAttribute("data-value");
+            videoElement.src = `./static/videos/${sceneValue}.mp4`
+          });
+        });
+      });
+    </script>    
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const scenePills = document.querySelectorAll(".scene-pill");
+      const videoElement = document.getElementById("dycheck-video");
+
+      scenePills.forEach((pill) => {
+        pill.addEventListener("click", (event) => {
+          const sceneValue = event.currentTarget.getAttribute("data-value");
+          const newSrc = `./static/videos/${sceneValue}.mp4`;
+
+          if (videoElement.src !== newSrc) {
+            const tempVideoElement = document.createElement('video');
+            tempVideoElement.src = newSrc;
+            tempVideoElement.preload = 'auto';
+
+            tempVideoElement.oncanplaythrough = () => {
+              videoElement.src = newSrc;
+              videoElement.play();
+              tempVideoElement.remove();
+            };
+
+            tempVideoElement.onerror = () => {
+              console.error('Failed to load the video:', newSrc);
+              tempVideoElement.remove();
+            };
+          }
+        });
+      });
+    });
+  </script>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+<pre><code>@inproceedings{liang2025himor,
+    author    = {Liang, Yiming and Xu, Tianhan and Kikuchi, Yuta},
+    title     = {{H}i{M}o{R}: Monocular Deformable Gaussian Reconstruction with Hierarchical Motion Representation},
+    booktitle = {CVPR},
+    year      = {2025},
+}</code></pre>
+  </div>
+</section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="columns is-centered">
+          <a href="https://www.preferred.jp/en/">
+            <img src="static/images/PFN_logo.png" class="img-logo" />
+          </a>
+          <a href="https://pfn3d.com/">
+            <img src="static/images/PFN3DScan_logo_blue.png" class="img-logo" />
+          </a>
+        </div>
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <div class="content has-text-centered">
+              <p>
+                This webpage template is borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>. 
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
